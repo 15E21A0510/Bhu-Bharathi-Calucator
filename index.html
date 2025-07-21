@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bhu Bharathi Charges Calculator</title>
   <style>
     body {
@@ -48,23 +49,32 @@
 <body>
   <div class="container">
     <h2>Bhu Bharathi Charges Calculator</h2>
+
     <label for="marketValue">Market Value per Acre (₹):</label>
-    <input type="number" id="marketValue" value="900000"><label for="extent">Extent in Guntas:</label>
-<input type="number" id="extent" value="5">
+    <input type="number" id="marketValue" value="900000" />
 
-<label for="type">Transaction Type:</label>
-<select id="type">
-  <option value="sale">Sale</option>
-  <option value="gift">Gift</option>
-  <option value="partition">Partition</option>
-  <option value="exchange">Exchange</option>
-</select>
+    <label for="extent">Extent in Guntas:</label>
+    <input type="number" id="extent" value="5" />
 
-<button onclick="calculateCharges()">Calculate</button>
+    <label for="type">Transaction Type:</label>
+    <select id="type">
+      <option value="sale">Sale</option>
+      <option value="gift">Gift</option>
+      <option value="partition">Partition</option>
+      <option value="exchange">Exchange</option>
+      <option value="mutation">Mutation</option>
+    </select>
 
-<div class="results" id="result" style="display:none;"></div>
+    <button onclick="calculateCharges()">Calculate</button>
 
-  </div>  <script>
+    <div class="results" id="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    function round(value) {
+      return Math.round(value);
+    }
+
     function calculateCharges() {
       const marketValue = parseFloat(document.getElementById('marketValue').value);
       const extent = parseFloat(document.getElementById('extent').value);
@@ -73,28 +83,47 @@
       const perGunta = marketValue / 40;
       const totalValue = perGunta * extent;
 
-      const stampRate = (type === 'gift') ? 1.5 : 5;
-      const regRate = (type === 'gift') ? 0.5 : 2.01;
+      let stampDuty = 0;
+      let regFee = 0;
+      let mutation = 0;
+      let ppb = 300;
+      let haritha = 50;
 
-      const stampDuty = totalValue * (stampRate / 100);
-      const regFee = totalValue * (regRate / 100);
-      const mutation = (2500 / 40) * extent;
-      const ppb = 300;
-      const haritha = 50;
+      if (type === 'mutation') {
+        mutation = (2500 / 40) * extent;
+        ppb = 300;
+        haritha = 0;
+      } else {
+        const stampRate = (type === 'gift') ? 1.5 : 5;
+        const regRate = (type === 'gift') ? 0.5 : 2.01;
+        stampDuty = totalValue * (stampRate / 100);
+        regFee = totalValue * (regRate / 100);
+        mutation = (2500 / 40) * extent;
+      }
+
       const total = stampDuty + regFee + mutation + ppb + haritha;
 
       const resultBox = document.getElementById('result');
-      resultBox.innerHTML = `
-        <div><strong>Per Gunta Value:</strong> ₹${perGunta.toFixed(2)}</div>
-        <div><strong>Total Market Value:</strong> ₹${totalValue.toFixed(2)}</div>
-        <div><strong>Stamp Duty:</strong> ₹${stampDuty.toFixed(2)}</div>
-        <div><strong>Registration Fee:</strong> ₹${regFee.toFixed(2)}</div>
-        <div><strong>Mutation Charges:</strong> ₹${mutation.toFixed(2)}</div>
-        <div><strong>PPB Charges:</strong> ₹${ppb}</div>
-        <div><strong>Haritha Nidhi:</strong> ₹${haritha}</div>
-        <div><strong>Total Payable:</strong> ₹${total.toFixed(2)}</div>
-      `;
+      if (type === 'mutation') {
+        resultBox.innerHTML = `
+          <div><strong>Mutation Charges:</strong> ₹${round(mutation)}</div>
+          <div><strong>PPB Charges:</strong> ₹${ppb}</div>
+          <div><strong>Total Payable:</strong> ₹${round(mutation + ppb)}</div>
+        `;
+      } else {
+        resultBox.innerHTML = `
+          <div><strong>Per Gunta Value:</strong> ₹${round(perGunta)}</div>
+          <div><strong>Total Market Value:</strong> ₹${round(totalValue)}</div>
+          <div><strong>Stamp Duty:</strong> ₹${round(stampDuty)}</div>
+          <div><strong>Registration Fee:</strong> ₹${round(regFee)}</div>
+          <div><strong>Mutation Charges:</strong> ₹${round(mutation)}</div>
+          <div><strong>PPB Charges:</strong> ₹${ppb}</div>
+          <div><strong>Haritha Nidhi:</strong> ₹${haritha}</div>
+          <div><strong>Total Payable:</strong> ₹${round(total)}</div>
+        `;
+      }
       resultBox.style.display = 'block';
     }
-  </script></body>
+  </script>
+</body>
 </html>
