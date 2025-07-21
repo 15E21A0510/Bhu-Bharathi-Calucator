@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bhu Bharathi Charges Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eaf4e6;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #1c7c37;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .results {
+      margin-top: 20px;
+      background: #f3fff0;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    .results div {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Bhu Bharathi Charges Calculator</h2>
+    <label for="marketValue">Market Value per Acre (₹):</label>
+    <input type="number" id="marketValue" value="900000"><label for="extent">Extent in Guntas:</label>
+<input type="number" id="extent" value="5">
+
+<label for="type">Transaction Type:</label>
+<select id="type">
+  <option value="sale">Sale</option>
+  <option value="gift">Gift</option>
+  <option value="partition">Partition</option>
+  <option value="exchange">Exchange</option>
+</select>
+
+<button onclick="calculateCharges()">Calculate</button>
+
+<div class="results" id="result" style="display:none;"></div>
+
+  </div>  <script>
+    function calculateCharges() {
+      const marketValue = parseFloat(document.getElementById('marketValue').value);
+      const extent = parseFloat(document.getElementById('extent').value);
+      const type = document.getElementById('type').value;
+
+      const perGunta = marketValue / 40;
+      const totalValue = perGunta * extent;
+
+      const stampRate = (type === 'gift') ? 1.5 : 5;
+      const regRate = (type === 'gift') ? 0.5 : 2.01;
+
+      const stampDuty = totalValue * (stampRate / 100);
+      const regFee = totalValue * (regRate / 100);
+      const mutation = (2500 / 40) * extent;
+      const ppb = 300;
+      const haritha = 50;
+      const total = stampDuty + regFee + mutation + ppb + haritha;
+
+      const resultBox = document.getElementById('result');
+      resultBox.innerHTML = `
+        <div><strong>Per Gunta Value:</strong> ₹${perGunta.toFixed(2)}</div>
+        <div><strong>Total Market Value:</strong> ₹${totalValue.toFixed(2)}</div>
+        <div><strong>Stamp Duty:</strong> ₹${stampDuty.toFixed(2)}</div>
+        <div><strong>Registration Fee:</strong> ₹${regFee.toFixed(2)}</div>
+        <div><strong>Mutation Charges:</strong> ₹${mutation.toFixed(2)}</div>
+        <div><strong>PPB Charges:</strong> ₹${ppb}</div>
+        <div><strong>Haritha Nidhi:</strong> ₹${haritha}</div>
+        <div><strong>Total Payable:</strong> ₹${total.toFixed(2)}</div>
+      `;
+      resultBox.style.display = 'block';
+    }
+  </script></body>
+</html>
